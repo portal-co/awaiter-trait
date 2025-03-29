@@ -23,12 +23,12 @@ pub mod __ {
 macro_rules! autoimpl {
     (<$($g:ident),*> $t:ty as Awaiter) => {
         const _: () = {
-            impl<$($g),*> $crate::AwaiterMut for $t where Self: $crate::Awaiter{
+            impl<$($g),*> $crate::AwaiterMut for $t{
                 fn await_mut<T>(&mut self, f: $crate::__::core::pin::Pin<&mut dyn $crate::__::core::future::Future<Output = T>>) -> T{
                     <Self as $crate::Awaiter>::r#await(self,f)
                 }
             }
-            impl<$($g),*> $crate::UnsafeAwaiter for $t where Self: $crate::Awaiter{
+            impl<$($g),*> $crate::UnsafeAwaiter for $t{
                 unsafe fn unsafe_await<T>(&self, f: $crate::__::core::pin::Pin<&mut dyn $crate::__::core::future::Future<Output = T>>) -> T{
                     <Self as $crate::Awaiter>::r#await(self,f)
                 }
@@ -39,7 +39,7 @@ macro_rules! autoimpl {
     };
     (<$($g:ident),*> $t:ty as UnsafeAwaiter) => {
         const _: () = {
-            impl<$($g),*> $crate::UnsafeAwaiterMut for $t where Self: $crate::UnsafeAwaiter{
+            impl<$($g),*> $crate::UnsafeAwaiterMut for $t{
                 unsafe fn unsafe_await_mut<T>(&mut self, f: $crate::__::core::pin::Pin<&mut dyn $crate::__::core::future::Future<Output = T>>) -> T{
                     unsafe{
                         <Self as $crate::UnsafeAwaiter>::unsafe_await(self,f)
@@ -50,7 +50,7 @@ macro_rules! autoimpl {
     };
     (<$($g:ident),*> $t:ty as AwaiterMut) => {
         const _: () = {
-            impl<$($g),*> $crate::UnsafeAwaiterMut for $t where Self: $crate::AwaiterMut{
+            impl<$($g),*> $crate::UnsafeAwaiterMut for $t{
                 unsafe fn unsafe_await_mut<T>(&mut self, f: $crate::__::core::pin::Pin<&mut dyn $crate::__::core::future::Future<Output = T>>) -> T{
                    <Self as $crate::AwaiterMut>::await_mut(self,f)
                 }
