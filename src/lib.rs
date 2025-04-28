@@ -59,62 +59,62 @@ macro_rules! autoimpl {
         };
     };
 }
-impl<'a, T2: Awaiter> Awaiter for &'a T2 {
+impl<'a, T2: Awaiter + ?Sized> Awaiter for &'a T2 {
     fn r#await<T>(&self, f: Pin<&mut (dyn Future<Output = T> + '_)>) -> T {
         (&**self).r#await(f)
     }
 }
-impl<'a, T2: Awaiter> Awaiter for &'a mut T2 {
+impl<'a, T2: Awaiter + ?Sized> Awaiter for &'a mut T2 {
     fn r#await<T>(&self, f: Pin<&mut (dyn Future<Output = T> + '_)>) -> T {
         (&**self).r#await(f)
     }
 }
-impl<'a, T2: Awaiter> AwaiterMut for &'a T2 {
+impl<'a, T2: Awaiter + ?Sized> AwaiterMut for &'a T2 {
     fn await_mut<T>(&mut self, f: Pin<&mut (dyn Future<Output = T> + '_)>) -> T {
         (&**self).r#await(f)
     }
 }
-impl<'a, T2: AwaiterMut> AwaiterMut for &'a mut T2 {
+impl<'a, T2: AwaiterMut + ?Sized> AwaiterMut for &'a mut T2 {
     fn await_mut<T>(&mut self, f: Pin<&mut (dyn Future<Output = T> + '_)>) -> T {
         (&mut **self).await_mut(f)
     }
 }
-impl<'a, T2: UnsafeAwaiter> UnsafeAwaiter for &'a T2 {
+impl<'a, T2: UnsafeAwaiter + ?Sized> UnsafeAwaiter for &'a T2 {
     unsafe fn unsafe_await<T>(&self, f: Pin<&mut (dyn Future<Output = T> + '_)>) -> T {
         unsafe { (&**self).unsafe_await(f) }
     }
 }
-impl<'a, T2: UnsafeAwaiter> UnsafeAwaiter for &'a mut T2 {
+impl<'a, T2: UnsafeAwaiter + ?Sized> UnsafeAwaiter for &'a mut T2 {
     unsafe fn unsafe_await<T>(&self, f: Pin<&mut (dyn Future<Output = T> + '_)>) -> T {
         unsafe { (&**self).unsafe_await(f) }
     }
 }
-impl<'a, T2: UnsafeAwaiter> UnsafeAwaiterMut for &'a T2 {
+impl<'a, T2: UnsafeAwaiter + ?Sized> UnsafeAwaiterMut for &'a T2 {
     unsafe fn unsafe_await_mut<T>(&mut self, f: Pin<&mut (dyn Future<Output = T> + '_)>) -> T {
         unsafe { (&**self).unsafe_await(f) }
     }
 }
-impl<'a, T2: UnsafeAwaiterMut> UnsafeAwaiterMut for &'a mut T2 {
+impl<'a, T2: UnsafeAwaiterMut + ?Sized> UnsafeAwaiterMut for &'a mut T2 {
     unsafe fn unsafe_await_mut<T>(&mut self, f: Pin<&mut (dyn Future<Output = T> + '_)>) -> T {
         unsafe { (&mut **self).unsafe_await_mut(f) }
     }
 }
-impl<T2: UnsafeAwaiter> UnsafeAwaiter for *const T2 {
+impl<T2: UnsafeAwaiter + ?Sized> UnsafeAwaiter for *const T2 {
     unsafe fn unsafe_await<T>(&self, f: Pin<&mut (dyn Future<Output = T> + '_)>) -> T {
         unsafe { (&**self).unsafe_await(f) }
     }
 }
-impl<T2: UnsafeAwaiter> UnsafeAwaiter for *mut T2 {
+impl<T2: UnsafeAwaiter + ?Sized> UnsafeAwaiter for *mut T2 {
     unsafe fn unsafe_await<T>(&self, f: Pin<&mut (dyn Future<Output = T> + '_)>) -> T {
         unsafe { (&**self).unsafe_await(f) }
     }
 }
-impl<T2: UnsafeAwaiter> UnsafeAwaiterMut for *const T2 {
+impl<T2: UnsafeAwaiter + ?Sized> UnsafeAwaiterMut for *const T2 {
     unsafe fn unsafe_await_mut<T>(&mut self, f: Pin<&mut (dyn Future<Output = T> + '_)>) -> T {
         unsafe { (&**self).unsafe_await(f) }
     }
 }
-impl<T2: UnsafeAwaiterMut> UnsafeAwaiterMut for *mut T2 {
+impl<T2: UnsafeAwaiterMut + ?Sized> UnsafeAwaiterMut for *mut T2 {
     unsafe fn unsafe_await_mut<T>(&mut self, f: Pin<&mut (dyn Future<Output = T> + '_)>) -> T {
         unsafe { (&mut **self).unsafe_await_mut(f) }
     }
