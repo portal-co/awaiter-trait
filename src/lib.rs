@@ -211,7 +211,7 @@ macro_rules! autoimpl {
             }
             $crate::autoimpl!(<$($g),*> $t as CoroutineMut);
             // $crate::autoimpl!(<$($g),*> $t as UnsafeCoroutineSelfMut);
-        }
+        };
     };
 }
 impl<'a, T2: Awaiter + ?Sized> Awaiter for &'a T2 {
