@@ -81,7 +81,7 @@ macro_rules! autoimpl {
                     f: impl FnOnce(&mut (dyn $crate::r#dyn::DynUnsafeAwaiterMut + '_)) -> T,
                 ) -> impl $crate::__::core::future::Future<Output = T>{
                     unsafe{
-                        <Self as $crate::UnsafeCoroutineSelfMut>::unsafe_exec_self_mut(self,move|a|f(a))
+                        <Self as $crate::UnsafeCoroutineSelfMut>::unsafe_exec_self_mut(self,move|mut a|f(&mut a))
                     }
                 }
             }
@@ -185,7 +185,7 @@ macro_rules! autoimpl {
                     f: impl FnOnce(&mut (dyn $crate::r#dyn::DynAwaiterMut + '_)) -> T,
                 ) -> impl $crate::__::core::future::Future<Output = T>{
                     unsafe{
-                        <Self as $crate::Coroutine>::exec(self,move|a|f(a))
+                        <Self as $crate::Coroutine>::exec(self,move|mut a|f(&mut a))
                     }
                 }
             }
@@ -210,7 +210,7 @@ macro_rules! autoimpl {
                 }
             }
             $crate::autoimpl!(<$($g),*> $t as CoroutineMut);
-            $crate::autoimpl!(<$($g),*> $t as UnsafeCoroutineSelfMut);
+            // $crate::autoimpl!(<$($g),*> $t as UnsafeCoroutineSelfMut);
         }
     };
 }
