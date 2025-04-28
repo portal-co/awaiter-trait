@@ -78,7 +78,7 @@ macro_rules! autoimpl {
             impl<$($g),*> $crate::UnsafeCoroutineMutSelfMut for $t{
                 unsafe fn unsafe_exec_mut_self_mut<T>(
                     &mut self,
-                    f: impl FnOnce(&mut (dyn $crate::r#dyn::DynUnsafeAwaiterMut + '_)) -> T,
+                    f: impl FnOnce(& (dyn $crate::r#dyn::DynUnsafeAwaiter + '_)) -> T,
                 ) -> impl $crate::__::core::future::Future<Output = T>{
                     unsafe{
                         <Self as $crate::UnsafeCoroutineSelfMut>::unsafe_exec_self_mut(self,move|a|f(a))
@@ -116,7 +116,7 @@ macro_rules! autoimpl {
             impl<$($g),*> $crate::UnsafeCoroutineSelfMut for $t{
                 unsafe fn unsafe_exec_self_mut<T>(
                     &mut self,
-                    f: impl FnOnce(&mut (dyn $crate::r#dyn::DynUnsafeAwaiter + '_)) -> T,
+                    f: impl FnOnce(& (dyn $crate::r#dyn::DynUnsafeAwaiter + '_)) -> T,
                 ) -> impl $crate::__::core::future::Future<Output = T>{
                     unsafe{
                         <Self as $crate::UnsafeCoroutine>::unsafe_exec(self,move|a|f(a))
@@ -167,7 +167,7 @@ macro_rules! autoimpl {
             impl<$($g),*> $crate::UnsafeCoroutineSelfMut for $t{
                 unsafe fn unsafe_exec_self_mut<T>(
                     &mut self,
-                    f: impl FnOnce(&mut (dyn $crate::r#dyn::DynUnsafeAwaiter + '_)) -> T,
+                    f: impl FnOnce(& (dyn $crate::r#dyn::DynUnsafeAwaiter + '_)) -> T,
                 ) -> impl $crate::__::core::future::Future<Output = T>{
                     unsafe{
                         <Self as $crate::CoroutineSelfMut>::exec_self_mut(self,move|a|f(a))
@@ -192,7 +192,7 @@ macro_rules! autoimpl {
             impl<$($g),*> $crate::CoroutineSelfMut for $t{
                 fn exec_self_mut<T>(
                     &mut self,
-                    f: impl FnOnce(&mut (dyn $crate::r#dyn::DynAwaiter + '_)) -> T,
+                    f: impl FnOnce(& (dyn $crate::r#dyn::DynAwaiter + '_)) -> T,
                 ) -> impl $crate::__::core::future::Future<Output = T>{
                     // unsafe{
                         <Self as $crate::Coroutine>::exec(self,move|a|f(a))
@@ -202,7 +202,7 @@ macro_rules! autoimpl {
             impl<$($g),*> $crate::UnsafeCoroutine for $t{
                 unsafe fn unsafe_exec<T>(
                     &self,
-                    f: impl FnOnce(&mut (dyn $crate::r#dyn::DynUnsafeAwaiter + '_)) -> T,
+                    f: impl FnOnce(& (dyn $crate::r#dyn::DynUnsafeAwaiter + '_)) -> T,
                 ) -> impl $crate::__::core::future::Future<Output = T>{
                     unsafe{
                         <Self as $crate::Coroutine>::exec(self,move|a|f(a))
