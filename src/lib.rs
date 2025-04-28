@@ -124,7 +124,7 @@ macro_rules! autoimpl {
                 }
             }
             $crate::autoimpl!(<$($g),*> $t as UnsafeCoroutineMut);
-        }
+        };
     };
     (<$($g:ident),*> $t:ty as CoroutineMut) => {
         const _: () = {
@@ -149,7 +149,7 @@ macro_rules! autoimpl {
                 }
             }
             $crate::autoimpl!(<$($g),*> $t as UnsafeCoroutineMut);
-        }
+        };
     };
     (<$($g:ident),*> $t:ty as CoroutineSelfMut) => {
         const _: () = {
@@ -175,7 +175,7 @@ macro_rules! autoimpl {
                 }
             }
             $crate::autoimpl!(<$($g),*> $t as CoroutineMutSelfMut);
-        }
+        };
     };
     (<$($g:ident),*> $t:ty as Coroutine) => {
         const _: () = {
