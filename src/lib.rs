@@ -3,6 +3,8 @@
 use core::pin::Pin;
 pub mod r#dyn;
 use r#dyn::*;
+#[cfg(feature = "embedded-io")]
+pub mod io;
 pub trait Awaiter: AwaiterMut + UnsafeAwaiter {
     fn r#await<T>(&self, f: Pin<&mut (dyn Future<Output = T> + '_)>) -> T;
 }
@@ -23,25 +25,25 @@ pub mod __ {
 }
 #[macro_export]
 macro_rules! autoimpl {
-    (<$($g:ident),*> $t:ty as Awaiter) => {
+    (<$($g:ident $(: $b:path)? ),*> $t:ty as Awaiter) => {
         const _: () = {
-            impl<$($g),*> $crate::AwaiterMut for $t{
+            impl<$($g $(: $b)? ),*> $crate::AwaiterMut for $t{
                 fn await_mut<T>(&mut self, f: $crate::__::core::pin::Pin<&mut (dyn $crate::__::core::future::Future<Output = T> + '_)>) -> T{
                     <Self as $crate::Awaiter>::r#await(self,f)
                 }
             }
-            impl<$($g),*> $crate::UnsafeAwaiter for $t{
+            impl<$($g $(: $b)? ),*> $crate::UnsafeAwaiter for $t{
                 unsafe fn unsafe_await<T>(&self, f: $crate::__::core::pin::Pin<&mut (dyn $crate::__::core::future::Future<Output = T> + '_)>) -> T{
                     <Self as $crate::Awaiter>::r#await(self,f)
                 }
             }
-            $crate::autoimpl!(<$($g),*> $t as AwaiterMut);
+            $crate::autoimpl!(<$($g $(: $b)? ),*> $t as AwaiterMut);
 
         };
     };
-    (<$($g:ident),*> $t:ty as UnsafeAwaiter) => {
+    (<$($g:ident $(: $b:path)? ),*> $t:ty as UnsafeAwaiter) => {
         const _: () = {
-            impl<$($g),*> $crate::UnsafeAwaiterMut for $t{
+            impl<$($g $(: $b)? ),*> $crate::UnsafeAwaiterMut for $t{
                 unsafe fn unsafe_await_mut<T>(&mut self, f: $crate::__::core::pin::Pin<&mut (dyn $crate::__::core::future::Future<Output = T> + '_)>) -> T{
                     unsafe{
                         <Self as $crate::UnsafeAwaiter>::unsafe_await(self,f)
@@ -50,18 +52,18 @@ macro_rules! autoimpl {
             }
         };
     };
-    (<$($g:ident),*> $t:ty as AwaiterMut) => {
+    (<$($g:ident $(: $b:path)? ),*> $t:ty as AwaiterMut) => {
         const _: () = {
-            impl<$($g),*> $crate::UnsafeAwaiterMut for $t{
+            impl<$($g $(: $b)? ),*> $crate::UnsafeAwaiterMut for $t{
                 unsafe fn unsafe_await_mut<T>(&mut self, f: $crate::__::core::pin::Pin<&mut (dyn $crate::__::core::future::Future<Output = T> + '_)>) -> T{
                    <Self as $crate::AwaiterMut>::await_mut(self,f)
                 }
             }
         };
     };
-    (<$($g:ident),*> $t:ty as UnsafeCoroutineMut) => {
+    (<$($g:ident $(: $b:path)? ),*> $t:ty as UnsafeCoroutineMut) => {
         const _: () = {
-            impl<$($g),*> $crate::UnsafeCoroutineMutSelfMut for $t{
+            impl<$($g $(: $b)? ),*> $crate::UnsafeCoroutineMutSelfMut for $t{
                 unsafe fn unsafe_exec_mut_self_mut<T>(
                     &mut self,
                     f: impl FnOnce(&mut (dyn $crate::r#dyn::DynUnsafeAwaiterMut + '_)) -> T,
@@ -73,9 +75,9 @@ macro_rules! autoimpl {
             }
         };
     };
-    (<$($g:ident),*> $t:ty as UnsafeCoroutineSelfMut) => {
+    (<$($g:ident $(: $b:path)? ),*> $t:ty as UnsafeCoroutineSelfMut) => {
         const _: () = {
-            impl<$($g),*> $crate::UnsafeCoroutineMutSelfMut for $t{
+            impl<$($g $(: $b)? ),*> $crate::UnsafeCoroutineMutSelfMut for $t{
                 unsafe fn unsafe_exec_mut_self_mut<T>(
                     &mut self,
                     f: impl FnOnce(&mut (dyn $crate::r#dyn::DynUnsafeAwaiterMut + '_)) -> T,
@@ -87,9 +89,9 @@ macro_rules! autoimpl {
             }
         };
     };
-    (<$($g:ident),*> $t:ty as CoroutineMutSelfMut) => {
+    (<$($g:ident $(: $b:path)? ),*> $t:ty as CoroutineMutSelfMut) => {
         const _: () = {
-            impl<$($g),*> $crate::UnsafeCoroutineMutSelfMut for $t{
+            impl<$($g $(: $b)? ),*> $crate::UnsafeCoroutineMutSelfMut for $t{
                 unsafe fn unsafe_exec_mut_self_mut<T>(
                     &mut self,
                     f: impl FnOnce(&mut (dyn $crate::r#dyn::DynUnsafeAwaiterMut + '_)) -> T,
@@ -101,9 +103,9 @@ macro_rules! autoimpl {
             }
         };
     };
-    (<$($g:ident),*> $t:ty as UnsafeCoroutine) => {
+    (<$($g:ident $(: $b:path)? ),*> $t:ty as UnsafeCoroutine) => {
         const _: () = {
-            impl<$($g),*> $crate::UnsafeCoroutineMut for $t{
+            impl<$($g $(: $b)? ),*> $crate::UnsafeCoroutineMut for $t{
                 unsafe fn unsafe_exec_mut<T>(
                     &self,
                     f: impl FnOnce(&mut (dyn $crate::r#dyn::DynUnsafeAwaiterMut + '_)) -> T,
@@ -113,7 +115,7 @@ macro_rules! autoimpl {
                     }
                 }
             }
-            impl<$($g),*> $crate::UnsafeCoroutineSelfMut for $t{
+            impl<$($g $(: $b)? ),*> $crate::UnsafeCoroutineSelfMut for $t{
                 unsafe fn unsafe_exec_self_mut<T>(
                     &mut self,
                     f: impl FnOnce(& (dyn $crate::r#dyn::DynUnsafeAwaiter + '_)) -> T,
@@ -123,12 +125,12 @@ macro_rules! autoimpl {
                     }
                 }
             }
-            $crate::autoimpl!(<$($g),*> $t as UnsafeCoroutineMut);
+            $crate::autoimpl!(<$($g $(: $b)? ),*> $t as UnsafeCoroutineMut);
         };
     };
-    (<$($g:ident),*> $t:ty as CoroutineMut) => {
+    (<$($g:ident $(: $b:path)? ),*> $t:ty as CoroutineMut) => {
         const _: () = {
-            impl<$($g),*> $crate::UnsafeCoroutineMut for $t{
+            impl<$($g $(: $b)? ),*> $crate::UnsafeCoroutineMut for $t{
                 unsafe fn unsafe_exec_mut<T>(
                     &self,
                     f: impl FnOnce(&mut (dyn $crate::r#dyn::DynUnsafeAwaiterMut + '_)) -> T,
@@ -138,7 +140,7 @@ macro_rules! autoimpl {
                     }
                 }
             }
-            impl<$($g),*> $crate::CoroutineMutSelfMut for $t{
+            impl<$($g $(: $b)? ),*> $crate::CoroutineMutSelfMut for $t{
                 fn exec_mut_self_mut<T>(
                     &mut self,
                     f: impl FnOnce(&mut (dyn $crate::r#dyn::DynAwaiterMut + '_)) -> T,
@@ -148,13 +150,13 @@ macro_rules! autoimpl {
                     // }
                 }
             }
-            $crate::autoimpl!(<$($g),*> $t as UnsafeCoroutineMut);
+            $crate::autoimpl!(<$($g $(: $b)? ),*> $t as UnsafeCoroutineMut);
         };
     };
-    (<$($g:ident),*> $t:ty as CoroutineSelfMut) => {
+    (<$($g:ident $(: $b:path)? ),*> $t:ty as CoroutineSelfMut) => {
         const _: () = {
 
-            impl<$($g),*> $crate::CoroutineMutSelfMut for $t{
+            impl<$($g $(: $b)? ),*> $crate::CoroutineMutSelfMut for $t{
                 fn exec_mut_self_mut<T>(
                     &mut self,
                     f: impl FnOnce(&mut (dyn $crate::r#dyn::DynAwaiterMut + '_)) -> T,
@@ -164,7 +166,7 @@ macro_rules! autoimpl {
                     // }
                 }
             }
-            impl<$($g),*> $crate::UnsafeCoroutineSelfMut for $t{
+            impl<$($g $(: $b)? ),*> $crate::UnsafeCoroutineSelfMut for $t{
                 unsafe fn unsafe_exec_self_mut<T>(
                     &mut self,
                     f: impl FnOnce(& (dyn $crate::r#dyn::DynUnsafeAwaiter + '_)) -> T,
@@ -174,12 +176,12 @@ macro_rules! autoimpl {
                     }
                 }
             }
-            $crate::autoimpl!(<$($g),*> $t as CoroutineMutSelfMut);
+            $crate::autoimpl!(<$($g $(: $b)? ),*> $t as CoroutineMutSelfMut);
         };
     };
-    (<$($g:ident),*> $t:ty as Coroutine) => {
+    (<$($g:ident $(: $b:path)? ),*> $t:ty as Coroutine) => {
         const _: () = {
-            impl<$($g),*> $crate::CoroutineMut for $t{
+            impl<$($g $(: $b)? ),*> $crate::CoroutineMut for $t{
                 fn exec_mut<T>(
                     &self,
                     f: impl FnOnce(&mut (dyn $crate::r#dyn::DynAwaiterMut + '_)) -> T,
@@ -189,7 +191,7 @@ macro_rules! autoimpl {
                     }
                 }
             }
-            impl<$($g),*> $crate::CoroutineSelfMut for $t{
+            impl<$($g $(: $b)? ),*> $crate::CoroutineSelfMut for $t{
                 fn exec_self_mut<T>(
                     &mut self,
                     f: impl FnOnce(& (dyn $crate::r#dyn::DynAwaiter + '_)) -> T,
@@ -199,7 +201,7 @@ macro_rules! autoimpl {
                     // }
                 }
             }
-            impl<$($g),*> $crate::UnsafeCoroutine for $t{
+            impl<$($g $(: $b)? ),*> $crate::UnsafeCoroutine for $t{
                 unsafe fn unsafe_exec<T>(
                     &self,
                     f: impl FnOnce(& (dyn $crate::r#dyn::DynUnsafeAwaiter + '_)) -> T,
@@ -209,7 +211,7 @@ macro_rules! autoimpl {
                     }
                 }
             }
-            impl<$($g),*> $crate::UnsafeCoroutineSelfMut for $t{
+            impl<$($g $(: $b)? ),*> $crate::UnsafeCoroutineSelfMut for $t{
                 unsafe fn unsafe_exec_self_mut<T>(
                     &mut self,
                     f: impl FnOnce(& (dyn $crate::r#dyn::DynUnsafeAwaiter + '_)) -> T,
@@ -219,8 +221,8 @@ macro_rules! autoimpl {
                     }
                 }
             }
-            $crate::autoimpl!(<$($g),*> $t as CoroutineMut);
-            // $crate::autoimpl!(<$($g),*> $t as UnsafeCoroutineSelfMut);
+            $crate::autoimpl!(<$($g $(: $b)? ),*> $t as CoroutineMut);
+            // $crate::autoimpl!(<$($g $(: $b)? ),*> $t as UnsafeCoroutineSelfMut);
         };
     };
 }

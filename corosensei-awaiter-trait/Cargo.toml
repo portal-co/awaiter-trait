@@ -1,0 +1,13 @@
+[package]
+name = "corosensei-awaiter-trait"
+version = "0.1.0"
+edition = "2024"
+license = "CC0-1.0"
+description = "Compatibility between `awaiter-trait` and `corosensei`"
+
+[dependencies]
+awaiter-trait = { version = "0.2.7", path = ".." }
+corosensei = { version = "0.2.2",  default-features = false }
+spin = "0.10.0"
+
+
