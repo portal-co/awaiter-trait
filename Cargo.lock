@@ -10,7 +10,7 @@ checksum = "ace50bade8e6234aa140d9a2f552bbee1db4d353f69b8217bc503490fc1a9f26"
 
 [[package]]
 name = "awaiter-trait"
-version = "0.2.7"
+version = "0.2.8"
 dependencies = [
  "embedded-io",
  "embedded-io-async",
@@ -35,7 +35,7 @@ dependencies = [
 
 [[package]]
 name = "corosensei-awaiter-trait"
-version = "0.1.0"
+version = "0.2.8"
 dependencies = [
  "awaiter-trait",
  "corosensei",
