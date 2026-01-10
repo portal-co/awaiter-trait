@@ -71,3 +71,12 @@ async fn example<C: Coroutine>(coro: &C) {
 ## License
 
 This project is licensed under [CC0-1.0](https://creativecommons.org/publicdomain/zero/1.0/).
+
+## Goals
+- [ ] Add project goals
+
+## Progress
+- [ ] Initial setup
+
+---
+*AI assisted*
