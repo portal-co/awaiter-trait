@@ -73,10 +73,13 @@ async fn example<C: Coroutine>(coro: &C) {
 This project is licensed under [CC0-1.0](https://creativecommons.org/publicdomain/zero/1.0/).
 
 ## Goals
-- [ ] Add project goals
+- [ ] Simplify async/sync bridging for embedded and coroutine contexts
+- [ ] Maintain `no_std` compatibility
 
 ## Progress
-- [ ] Initial setup
+- [ ] Core `Awaiter` traits defined
+- [ ] `autoimpl!` macro available
+- [ ] `embedded-io` integration supported
 
 ---
 *AI assisted*
