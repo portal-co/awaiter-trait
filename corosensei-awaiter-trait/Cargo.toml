@@ -6,7 +6,7 @@ license = "CC0-1.0"
 description = "Compatibility between `awaiter-trait` and `corosensei`"
 
 [dependencies]
-awaiter-trait = { version = "0.2.7", path = ".." }
+awaiter-trait = { version = "0.3.0-alpha.1", path = ".." }
 corosensei = { version = "0.2.2",  default-features = false }
 spin = "0.10.0"
 
